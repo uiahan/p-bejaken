@@ -1,0 +1,493 @@
+/* ==========================================================================
+   Toko online Cap Jamu Raden
+   Memakai token & komponen dari landing.css (.nav, .menu, .line, .fade-in, .kawung).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+.search > div {
+    background: color-mix(in srgb, var(--color-hutan) 8%, transparent);
+    box-shadow: inset 0 0 0 1.5px transparent;
+    transition: box-shadow 0.25s ease, background-color 0.25s ease;
+}
+.search > div:focus-within {
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--color-hutan);
+}
+.search input:focus-visible {
+    outline: none;
+}
+.search input::-webkit-search-cancel-button {
+    display: none;
+}
+
+.cart-badge {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    padding-inline: 0.35rem;
+    border-radius: 999px;
+    background: var(--color-emas);
+    color: var(--color-hutan);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+}
+.cart-badge[hidden] {
+    display: none;
+}
+.cart-badge.bump {
+    animation: bump 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cart-btn.bump {
+    animation: bump-btn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes bump {
+    40% {
+        transform: scale(1.5);
+    }
+}
+@keyframes bump-btn {
+    40% {
+        transform: scale(1.07);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Rak varian: satu momen utama halaman toko
+   Botol naik satu per satu ke rak, dan latar berubah mengikuti botol yang disorot.
+   -------------------------------------------------------------------------- */
+.rak-band {
+    --rak: #E8DCC3;
+    background: var(--rak);
+    transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rak {
+    position: relative;
+}
+.rak-scroll {
+    scroll-padding-inline: 1.5rem;
+    margin-inline: -1.5rem;
+    padding-inline: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+}
+.rak-scroll::-webkit-scrollbar {
+    display: none;
+}
+.rak-isi {
+    position: relative;
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    gap: 0.75rem;
+}
+/* garis rak */
+.rak-isi::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 3.1rem;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--color-hutan);
+}
+@media (min-width: 1024px) {
+    .rak-scroll {
+        margin-inline: 0;
+        padding-inline: 0;
+        overflow: visible;
+    }
+    .rak-isi {
+        display: grid;
+        width: auto;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 1.25rem;
+    }
+}
+.rak-isi > li {
+    flex: 0 0 34vw;
+    min-width: 128px;
+    max-width: 180px;
+    scroll-snap-align: start;
+    opacity: 0;
+    transform: translateY(70px);
+    animation: naik 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(450ms + var(--i, 0) * 90ms);
+}
+@media (min-width: 1024px) {
+    .rak-isi > li {
+        flex: none;
+        max-width: none;
+    }
+}
+@keyframes naik {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.rak-item {
+    position: relative;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.rak-item .foto {
+    display: flex;
+    height: clamp(190px, 24vw, 300px);
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: -3px;
+}
+.rak-item img {
+    height: 100%;
+    width: auto;
+    filter: drop-shadow(0 12px 8px rgb(18 55 42 / 0.2));
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+.rak-item .nama {
+    display: block;
+    height: 2.2rem;
+    padding-top: 1.05rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.rak-item:hover img,
+.rak-item:focus-visible img {
+    transform: translateY(-16px) rotate(-1.5deg);
+}
+.rak:has(.rak-item:hover) .rak-item:not(:hover) img,
+.rak:has(.rak-item:focus-visible) .rak-item:not(:focus-visible) img {
+    opacity: 0.55;
+}
+
+.rak-note {
+    min-height: 1.5rem;
+}
+.rak-note span {
+    display: inline-block;
+}
+
+/* --------------------------------------------------------------------------
+   Filter & katalog
+   -------------------------------------------------------------------------- */
+.chip {
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 35%, transparent);
+    transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.chip:hover {
+    box-shadow: inset 0 0 0 1.5px var(--color-hutan);
+}
+.chip[aria-pressed='true'] {
+    background: var(--color-hutan);
+    color: var(--color-daun);
+    box-shadow: none;
+}
+
+.produk {
+    transition: opacity 0.28s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.produk.is-out {
+    opacity: 0;
+    transform: scale(0.94);
+}
+.produk.is-in {
+    animation: masuk 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes masuk {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+}
+
+.produk .foto {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 28px;
+    background: var(--c);
+}
+.produk .foto img {
+    position: absolute;
+    inset: 7% 9% 6%;
+    width: 82%;
+    height: 87%;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 10px rgb(18 55 42 / 0.22));
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.produk .foto:hover img,
+.produk .foto:focus-visible img {
+    transform: translateY(-10px) scale(1.04);
+}
+.produk.habis .foto img {
+    opacity: 0.45;
+    filter: grayscale(0.6);
+}
+.produk .tag {
+    position: absolute;
+    left: 0.9rem;
+    top: 0.9rem;
+    z-index: 1;
+    border-radius: 999px;
+    background: var(--color-daun);
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.produk.ping .foto {
+    animation: ping 1.4s ease-out;
+}
+@keyframes ping {
+    0% {
+        box-shadow: 0 0 0 0 var(--color-hutan);
+    }
+    35% {
+        box-shadow: 0 0 0 7px var(--color-hutan);
+    }
+    100% {
+        box-shadow: 0 0 0 7px transparent;
+    }
+}
+
+.btn-tambah {
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-tambah:hover:not(:disabled):not(.ok) {
+    background: var(--color-hutan-deep);
+}
+.btn-tambah:active:not(:disabled) {
+    transform: scale(0.97);
+}
+.btn-tambah:disabled {
+    background: color-mix(in srgb, var(--color-hutan) 18%, transparent);
+    color: color-mix(in srgb, var(--color-hutan) 60%, transparent);
+    cursor: not-allowed;
+}
+.btn-tambah.ok {
+    background: var(--color-emas);
+    color: var(--color-hutan);
+}
+
+/* Foto yang terbang ke keranjang */
+.terbang {
+    position: fixed;
+    z-index: 90;
+    pointer-events: none;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 8px rgb(18 55 42 / 0.25));
+    will-change: transform, opacity;
+}
+
+/* --------------------------------------------------------------------------
+   Keranjang geser
+   -------------------------------------------------------------------------- */
+.cart-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgb(18 55 42 / 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+.cart {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    display: flex;
+    width: min(100%, 26rem);
+    flex-direction: column;
+    background: var(--color-daun);
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.55s;
+}
+.cart:focus {
+    outline: none;
+}
+body.cart-open .cart-overlay {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+body.cart-open .cart {
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+}
+body.cart-open {
+    overflow: hidden;
+}
+
+.cart-body {
+    flex: 1;
+    overflow-y: auto;
+    padding-inline: 1.5rem;
+}
+.cart-empty {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 3rem;
+}
+.cart-body[data-kosong='true'] .cart-empty {
+    display: flex;
+}
+.cart-body[data-kosong='true'] .cart-list {
+    display: none;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 4.75rem 1fr;
+    gap: 1rem;
+    padding-block: 1.1rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-hutan) 18%, transparent);
+}
+.cart-item.baru {
+    animation: masuk-item 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes masuk-item {
+    from {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+}
+.cart-item .thumb {
+    position: relative;
+    height: 6.5rem;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--c);
+}
+.cart-item .thumb img {
+    position: absolute;
+    inset: 6% 8%;
+    width: 84%;
+    height: 88%;
+    object-fit: contain;
+}
+.stepper {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 35%, transparent);
+}
+.stepper button {
+    display: grid;
+    height: 2.25rem;
+    width: 2.25rem;
+    place-items: center;
+    border-radius: 999px;
+    font-size: 1.15rem;
+    line-height: 1;
+    transition: background-color 0.2s ease;
+}
+.stepper button:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-hutan) 10%, transparent);
+}
+.stepper button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+.stepper output {
+    min-width: 1.6rem;
+    text-align: center;
+    font-weight: 500;
+}
+.cart-foot {
+    padding: 1.25rem 1.5rem 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-hutan) 18%, transparent);
+}
+.cart-foot[hidden] {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Toast
+   -------------------------------------------------------------------------- */
+.toast {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 1.5rem;
+    z-index: 80;
+    display: flex;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    margin-inline: auto;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 22px;
+    background: var(--color-hutan-deep);
+    padding: 0.85rem 1.5rem;
+    color: var(--color-daun);
+    font-size: 0.95rem;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast.show {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+}
+body.cart-open .toast {
+    opacity: 0;
+    pointer-events: none;
+}
+.toast-aksi {
+    font-weight: 600;
+    color: var(--color-emas);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    white-space: nowrap;
+}
+.toast-aksi[hidden] {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Gerak dikurangi
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .rak-isi > li {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+    .rak-band,
+    .rak-item img,
+    .produk,
+    .produk .foto img,
+    .cart,
+    .cart-overlay,
+    .toast {
+        transition-duration: 0.01ms;
+    }
+    .produk.is-in,
+    .produk.ping .foto,
+    .cart-item.baru,
+    .cart-badge.bump,
+    .cart-btn.bump {
+        animation: none;
+    }
+}

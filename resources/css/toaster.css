@@ -1,0 +1,151 @@
+.toaster {
+    position: fixed;
+    top: max(1rem, env(safe-area-inset-top));
+    left: 1rem;
+    right: 1rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+    pointer-events: none;
+}
+@media (min-width: 768px) {
+    .toaster {
+        left: auto;
+        right: 1.5rem;
+        top: 1.5rem;
+        width: 24rem;
+        align-items: stretch;
+    }
+}
+
+.notif {
+    --bg: var(--color-hutan-deep);
+    --fg: var(--color-daun);
+    --ikon: var(--color-emas);
+    --ikon-fg: var(--color-hutan-deep);
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 26rem;
+    align-items: flex-start;
+    gap: 0.85rem;
+    overflow: hidden;
+    border-radius: 22px;
+    background: var(--bg);
+    padding: 1rem 0.85rem 1.1rem 1rem;
+    color: var(--fg);
+    pointer-events: auto;
+    box-shadow: 0 14px 30px -12px rgb(18 55 42 / 0.45);
+    animation: notif-masuk 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.notif[data-type='error'] {
+    --bg: var(--color-rosella);
+    --fg: #fff;
+    --ikon: #fff;
+    --ikon-fg: var(--color-rosella);
+}
+.notif[data-type='info'] {
+    --bg: var(--color-daun-2);
+    --fg: var(--color-hutan);
+    --ikon: var(--color-hutan);
+    --ikon-fg: var(--color-daun);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 30%, transparent),
+        0 14px 30px -14px rgb(18 55 42 / 0.3);
+}
+.notif.keluar {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+    pointer-events: none;
+}
+@keyframes notif-masuk {
+    from {
+        opacity: 0;
+        transform: translateY(-18px) scale(0.96);
+    }
+}
+
+.notif-ikon {
+    display: grid;
+    flex: none;
+    height: 2rem;
+    width: 2rem;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--ikon);
+    color: var(--ikon-fg);
+}
+.notif-ikon svg path {
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: notif-gambar 0.55s cubic-bezier(0.65, 0, 0.35, 1) 0.2s forwards;
+}
+@keyframes notif-gambar {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.notif-isi {
+    flex: 1;
+    min-width: 0;
+    padding-top: 0.3rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.notif-tutup {
+    display: grid;
+    flex: none;
+    height: 2rem;
+    width: 2rem;
+    place-items: center;
+    border-radius: 999px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+.notif-tutup:hover,
+.notif-tutup:focus-visible {
+    opacity: 1;
+    background: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+/* garis waktu di dasar, menyusut sampai toast hilang; berhenti saat disorot */
+.notif-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    background: var(--ikon);
+    opacity: 0.85;
+    transform-origin: left;
+    animation: notif-habis var(--dur, 4500ms) linear forwards;
+}
+.notif:hover .notif-bar,
+.notif:focus-within .notif-bar {
+    animation-play-state: paused;
+}
+@keyframes notif-habis {
+    to {
+        transform: scaleX(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .notif,
+    .notif-ikon svg path {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+    .notif {
+        transition-duration: 0.01ms;
+    }
+    .notif-bar {
+        display: none;
+    }
+}

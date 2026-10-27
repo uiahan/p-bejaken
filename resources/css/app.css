@@ -4,6 +4,53 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+    --color-daun: #f0f2ea;
+    --color-daun-2: #e3e8da;
+    --color-hutan: #1d4a38;
+    --color-hutan-deep: #12372a;
+    --color-emas: #e0b055;
+    --color-rosella: #a8213a;
+    --color-kunyit: #e2a21b;
+}
+
+@import './landing.css';
+@import './ecommerce.css';
+@import './auth.css';
+@import './toaster.css';
+@import './admin.css';
+
+/* ========================================
+   CUSTOM SCROLLBAR - CAP JAMU RADEN
+======================================== */
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-hutan) var(--color-daun);
+}
+
+/* Chrome, Edge, Safari, dan browser WebKit */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-daun);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--color-hutan);
+    border: 2px solid var(--color-daun);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-hutan-deep);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--color-daun);
 }

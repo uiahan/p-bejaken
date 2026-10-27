@@ -1,0 +1,390 @@
+/* ==========================================================================
+   Dashboard admin
+   Memakai token dan komponen dari landing.css (.line, .fade-in).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Sidebar
+   -------------------------------------------------------------------------- */
+.admin-side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 60;
+    display: flex;
+    width: min(19rem, 88vw);
+    flex-direction: column;
+    background: var(--color-hutan-deep);
+    color: var(--color-daun);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.55s;
+}
+body.side-open .admin-side {
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+}
+@media (min-width: 1024px) {
+    .admin-side {
+        width: 17rem;
+        transform: none;
+        visibility: visible;
+    }
+}
+
+.admin-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgb(18 55 42 / 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+body.side-open .admin-scrim {
+    opacity: 1;
+    pointer-events: auto;
+}
+body.side-open {
+    overflow: hidden;
+}
+@media (min-width: 1024px) {
+    .admin-scrim {
+        display: none;
+    }
+    body.side-open {
+        overflow: auto;
+    }
+}
+
+.side-item {
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.85rem;
+    border-radius: 16px;
+    padding: 0.8rem 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: color-mix(in srgb, var(--color-daun) 80%, transparent);
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+a.side-item:hover {
+    background: rgb(240 242 234 / 0.08);
+    color: var(--color-daun);
+}
+.side-item[aria-current='page'] {
+    background: rgb(240 242 234 / 0.12);
+    color: var(--color-daun);
+}
+.side-item[aria-current='page']::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 20%;
+    bottom: 20%;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: var(--color-emas);
+}
+.side-item.is-soon {
+    cursor: not-allowed;
+    color: color-mix(in srgb, var(--color-daun) 45%, transparent);
+}
+.side-item em,
+.pintas em {
+    margin-left: auto;
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.72rem;
+    font-style: normal;
+    font-weight: 500;
+    box-shadow: inset 0 0 0 1px currentColor;
+    opacity: 0.8;
+}
+
+/* menu muncul satu per satu saat sidebar tampil */
+.side-in {
+    animation: side-masuk 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(250ms + var(--i, 0) * 60ms);
+}
+@keyframes side-masuk {
+    from {
+        opacity: 0;
+        transform: translateX(-14px);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Kartu ringkasan
+   -------------------------------------------------------------------------- */
+.stat {
+    display: flex;
+    min-height: 11.5rem;
+    flex-direction: column;
+    border-radius: 28px;
+    background: var(--c);
+    padding: 1.4rem 1.5rem;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stat:hover {
+    transform: translateY(-4px);
+}
+.stat-nilai {
+    margin: 0.6rem 0 1rem;
+    font-size: clamp(2.2rem, 3.4vw, 2.9rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+}
+.stat-nilai.is-kosong {
+    opacity: 0.35;
+}
+
+/* --------------------------------------------------------------------------
+   Daftar & pintasan
+   -------------------------------------------------------------------------- */
+.baris {
+    animation: baris-masuk 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(900ms + var(--i, 0) * 90ms);
+}
+@keyframes baris-masuk {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+}
+
+.pintas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 22px;
+    padding: 1.1rem 1.3rem;
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 22%, transparent);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+a.pintas:hover {
+    background: var(--color-hutan);
+    color: var(--color-daun);
+    box-shadow: none;
+}
+a.pintas:hover span span {
+    color: color-mix(in srgb, var(--color-daun) 75%, transparent);
+}
+a.pintas svg {
+    flex: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+a.pintas:hover svg {
+    transform: translateX(4px);
+}
+.pintas.is-soon {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#isi:focus {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .side-in,
+    .baris {
+        animation: none;
+    }
+    .admin-side,
+    .admin-scrim,
+    .stat {
+        transition-duration: 0.01ms;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Kelola pengguna
+   -------------------------------------------------------------------------- */
+/* di dalam grid, jarak diatur gap, bukan margin .field + .field */
+fieldset .field + .field {
+    margin-top: 0;
+}
+fieldset {
+    min-width: 0;
+}
+
+.tabel-kepala,
+.tabel-baris {
+    gap: 0.5rem 1.5rem;
+    align-items: center;
+}
+@media (min-width: 768px) {
+    .tabel-kepala,
+    .tabel-baris {
+        grid-template-columns: minmax(0, 2.4fr) 8.5rem 10.5rem 7rem 11rem;
+    }
+}
+.tabel-kepala {
+    padding: 0 0.25rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-hutan) 60%, transparent);
+}
+.tabel-baris {
+    display: grid;
+    padding: 1.1rem 0.25rem;
+    transition: background-color 0.25s ease;
+}
+.tabel-baris:hover {
+    background: color-mix(in srgb, var(--color-hutan) 4%, transparent);
+}
+.baris.cepat {
+    animation-delay: calc(550ms + var(--i, 0) * 60ms);
+}
+
+.role-pill {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 0.25rem 0.8rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 30%, transparent);
+}
+.role-pill[data-role='admin'] {
+    background: var(--color-daun-2);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 45%, transparent);
+}
+.role-pill[data-role='superadmin'] {
+    background: var(--color-emas);
+    box-shadow: none;
+}
+
+.aksi {
+    border-radius: 999px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 35%, transparent);
+    transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.aksi:hover {
+    background: var(--color-hutan);
+    color: var(--color-daun);
+    box-shadow: none;
+}
+.aksi-hapus {
+    color: var(--color-rosella);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-rosella) 45%, transparent);
+}
+.aksi-hapus:hover {
+    background: var(--color-rosella);
+    color: #fff;
+}
+
+.pager {
+    border-radius: 999px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: inset 0 0 0 1.5px var(--color-hutan);
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+a.pager:hover {
+    background: var(--color-hutan);
+    color: var(--color-daun);
+}
+.pager.is-off {
+    opacity: 0.35;
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 50%, transparent);
+}
+
+/* pilihan role */
+.role-opsi {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+.role-opsi input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+}
+.role-kartu {
+    display: block;
+    height: 100%;
+    border-radius: 20px;
+    padding: 1rem 1.1rem;
+    color: color-mix(in srgb, var(--color-hutan) 80%, transparent);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 30%, transparent);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.role-opsi:hover .role-kartu {
+    box-shadow: inset 0 0 0 1.5px var(--color-hutan);
+}
+.role-opsi input:checked + .role-kartu {
+    background: var(--color-hutan);
+    color: color-mix(in srgb, var(--color-daun) 85%, transparent);
+    box-shadow: none;
+}
+.role-opsi input:checked + .role-kartu strong {
+    color: var(--color-daun);
+}
+.role-opsi input:focus-visible + .role-kartu {
+    outline: 2px solid var(--color-hutan);
+    outline-offset: 3px;
+}
+.role-opsi input:disabled {
+    cursor: not-allowed;
+}
+.role-opsi input:disabled + .role-kartu {
+    opacity: 0.6;
+}
+.role-opsi input:disabled:not(:checked) + .role-kartu {
+    opacity: 0.35;
+}
+
+/* dialog konfirmasi */
+.dialog {
+    margin: auto;
+    width: min(28rem, calc(100% - 2rem));
+    border: 0;
+    border-radius: 28px;
+    background: var(--color-daun);
+    padding: 1.75rem;
+    color: var(--color-hutan);
+    box-shadow: 0 30px 60px -20px rgb(18 55 42 / 0.5);
+}
+.dialog[open] {
+    animation: dialog-masuk 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dialog::backdrop {
+    background: rgb(18 55 42 / 0.55);
+    animation: dialog-latar 0.3s ease;
+}
+@keyframes dialog-masuk {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.97);
+    }
+}
+@keyframes dialog-latar {
+    from {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dialog[open],
+    .dialog::backdrop {
+        animation: none;
+    }
+    .role-kartu,
+    .tabel-baris {
+        transition-duration: 0.01ms;
+    }
+}

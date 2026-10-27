@@ -1,0 +1,316 @@
+/* ==========================================================================
+   Halaman masuk & daftar
+   Memakai token dan komponen dari landing.css (.line, .fade-in, .bottle-in).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Panel varian
+   -------------------------------------------------------------------------- */
+.auth-panel {
+    --panel: #f4cd72;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--color-hutan);
+    color: var(--color-hutan);
+}
+@media (min-width: 1024px) {
+    .auth-panel {
+        position: sticky;
+        top: 0;
+        grid-column: span 5 / span 5;
+        align-self: start;
+        height: 100svh;
+    }
+}
+
+/* Warna varian menyebar dari bawah, mengganti hijau. Hanya sekali, saat halaman dibuka. */
+.auth-flood {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--panel);
+    -webkit-clip-path: circle(0 at 78% 92%);
+    clip-path: circle(0 at 78% 92%);
+    animation: sebar 1.5s cubic-bezier(0.65, 0, 0.35, 1) 0.1s forwards;
+}
+@keyframes sebar {
+    to {
+        -webkit-clip-path: circle(150% at 78% 92%);
+        clip-path: circle(150% at 78% 92%);
+    }
+}
+
+.auth-bottle {
+    height: clamp(260px, 42svh, 440px);
+    width: auto;
+    filter: drop-shadow(0 16px 12px rgb(18 55 42 / 0.25));
+    animation-delay: 0.9s;
+}
+
+/* garis rak tempat botol berdiri */
+.auth-rak {
+    height: 10px;
+    margin-top: -4px;
+    border-radius: 999px;
+    background: var(--color-hutan);
+    transform-origin: left;
+    animation: garis 1s cubic-bezier(0.16, 1, 0.3, 1) 0.7s backwards;
+}
+@keyframes garis {
+    from {
+        transform: scaleX(0);
+    }
+}
+
+.back-link {
+    transition: background-color 0.25s ease;
+}
+.back-link:hover {
+    background: color-mix(in srgb, var(--color-hutan) 10%, transparent);
+}
+.back-link svg {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.back-link:hover svg {
+    transform: translateX(-3px);
+}
+
+/* --------------------------------------------------------------------------
+   Form
+   -------------------------------------------------------------------------- */
+.field + .field {
+    margin-top: 1.25rem;
+}
+.field-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+.field-hint {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--color-hutan) 65%, transparent);
+}
+.input {
+    width: 100%;
+    border-radius: 16px;
+    background: transparent;
+    padding: 0.95rem 1.1rem;
+    font-size: 1rem;
+    color: var(--color-hutan);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 32%, transparent);
+    transition: box-shadow 0.25s ease, background-color 0.25s ease;
+}
+.input::placeholder {
+    color: color-mix(in srgb, var(--color-hutan) 42%, transparent);
+}
+.input:hover {
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 60%, transparent);
+}
+.input:focus,
+.input:focus-visible {
+    outline: none;
+    background: #fff;
+    box-shadow: inset 0 0 0 2px var(--color-hutan);
+}
+.input[aria-invalid='true'] {
+    box-shadow: inset 0 0 0 2px var(--color-rosella);
+}
+.field-error {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-rosella);
+    animation: goyang 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes goyang {
+    20%,
+    60% {
+        transform: translateX(-4px);
+    }
+    40%,
+    80% {
+        transform: translateX(4px);
+    }
+}
+
+.pw-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    padding: 0.45rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+.pw-toggle:hover {
+    background: color-mix(in srgb, var(--color-hutan) 10%, transparent);
+}
+
+.alert {
+    border-radius: 16px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+.alert-error {
+    background: color-mix(in srgb, var(--color-rosella) 10%, transparent);
+    color: var(--color-rosella);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-rosella) 45%, transparent);
+}
+.alert-ok {
+    background: color-mix(in srgb, var(--color-hutan) 10%, transparent);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 40%, transparent);
+}
+
+/* checkbox */
+.cek {
+    display: inline-flex;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.95rem;
+}
+.cek input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: grid;
+    height: 1.3rem;
+    width: 1.3rem;
+    place-content: center;
+    border-radius: 7px;
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-hutan) 50%, transparent);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.cek input::after {
+    content: '';
+    height: 0.65rem;
+    width: 0.35rem;
+    margin-top: -0.12rem;
+    border: solid var(--color-daun);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cek input:checked {
+    background: var(--color-hutan);
+    box-shadow: none;
+}
+.cek input:checked::after {
+    transform: rotate(45deg) scale(1);
+}
+
+/* kekuatan password */
+.strength-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.35rem;
+}
+.strength-bar i {
+    display: block;
+    height: 6px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-hutan) 14%, transparent);
+    overflow: hidden;
+    position: relative;
+}
+.strength-bar i::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--s, var(--color-hutan));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.strength-bar i.on::after {
+    transform: scaleX(1);
+}
+[data-level='1'] {
+    --s: var(--color-rosella);
+}
+[data-level='2'] {
+    --s: var(--color-kunyit);
+}
+[data-level='3'] {
+    --s: var(--color-hutan);
+}
+
+/* tombol kirim */
+.btn-submit {
+    position: relative;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    border-radius: 999px;
+    background: var(--color-hutan);
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    color: var(--color-daun);
+    transition: background-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-submit:hover {
+    background: var(--color-hutan-deep);
+}
+.btn-submit:active {
+    transform: scale(0.98);
+}
+.btn-submit[aria-busy='true'] {
+    pointer-events: none;
+    opacity: 0.85;
+}
+.btn-submit .spin {
+    display: none;
+    height: 1.05rem;
+    width: 1.05rem;
+    border-radius: 999px;
+    border: 2px solid color-mix(in srgb, var(--color-daun) 35%, transparent);
+    border-top-color: var(--color-daun);
+    animation: putar 0.7s linear infinite;
+}
+.btn-submit[aria-busy='true'] .spin {
+    display: block;
+}
+@keyframes putar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tautan {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+    font-weight: 500;
+    transition: text-underline-offset 0.25s ease;
+}
+.tautan:hover {
+    text-underline-offset: 7px;
+}
+
+/* --------------------------------------------------------------------------
+   Gerak dikurangi
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .auth-flood {
+        animation: none;
+        -webkit-clip-path: circle(150% at 78% 92%);
+        clip-path: circle(150% at 78% 92%);
+    }
+    .auth-rak,
+    .field-error,
+    .btn-submit .spin {
+        animation: none;
+    }
+    .strength-bar i::after,
+    .cek input::after {
+        transition-duration: 0.01ms;
+    }
+}
