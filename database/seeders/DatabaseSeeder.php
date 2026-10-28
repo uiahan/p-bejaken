@@ -43,5 +43,7 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '6281234567890',
             'alamat' => 'Jl. Contoh Alamat No. 123, Kota Contoh, Negara Contoh',
         ]);
+
+        $this->call(ProdukSeeder::class);
     }
 }

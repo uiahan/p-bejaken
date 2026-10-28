@@ -16,6 +16,6 @@
     </header>
 
     <div class="fade-in mt-10 max-w-2xl" style="--d: 550ms">
-        @include('components.admin.pengguna.form')
+        @include('features.admin.pengguna.form')
     </div>
 @endsection

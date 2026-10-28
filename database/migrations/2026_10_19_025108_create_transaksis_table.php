@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
-            $table->date('tgl_transaksi');
-            $table->decimal('total_bayar');
-            $table->string('metode_bayar');
+            $table->date('tgl_transaksi')->nullable();
+            $table->decimal('total_bayar', 12, 2)->default(0);
+            $table->string('metode_bayar')->nullable();
+            $table->string('bukti_bayar')->nullable();
+            $table->string('pengiriman')->nullable();
             $table->string('status');
             $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

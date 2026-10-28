@@ -230,6 +230,7 @@ if (cartEl) {
             }
 
             const ok = add({
+                id: Number(d.id),
                 slug: d.slug,
                 nama: d.nama,
                 harga: Number(d.harga),
@@ -338,47 +339,3 @@ if (chips.length && cards.length) {
 
     chips.forEach((c) => c.addEventListener('click', () => apply(c.dataset.filter)));
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const dropdown = document.querySelector('[data-profile-dropdown]');
-
-    if (!dropdown) return;
-
-    const toggle = dropdown.querySelector('[data-profile-toggle]');
-    const menu = dropdown.querySelector('[data-profile-menu]');
-
-    function openMenu() {
-        menu.classList.remove('hidden');
-        toggle.setAttribute('aria-expanded', 'true');
-    }
-
-    function closeMenu() {
-        menu.classList.add('hidden');
-        toggle.setAttribute('aria-expanded', 'false');
-    }
-
-    toggle.addEventListener('click', function (event) {
-        event.stopPropagation();
-
-        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-
-        if (isOpen) {
-            closeMenu();
-        } else {
-            openMenu();
-        }
-    });
-
-    document.addEventListener('click', function (event) {
-        if (!dropdown.contains(event.target)) {
-            closeMenu();
-        }
-    });
-
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape') {
-            closeMenu();
-            toggle.focus();
-        }
-    });
-});

@@ -176,6 +176,6 @@
             Menampilkan {{ $daftar->count() }} dari {{ $daftar->total() }} produk.
         </p>
 
-        {{ $daftar->links('components.admin.pengguna.pagination') }}
+        {{ $daftar->links('components.admin.pagination') }}
     </section>
 @endsection

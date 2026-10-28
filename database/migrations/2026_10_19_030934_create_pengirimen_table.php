@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('pengirimen', function (Blueprint $table) {
             $table->id();
-            $table->string('metode');
-            $table->string('alamat_tujuan');
-            $table->decimal('ongkir');
-            $table->string('status');
+            $table->string('metode')->default('Belum ditentukan');
+            $table->string('alamat_tujuan')->nullable();
+            $table->decimal('ongkir', 12, 2)->default(0);
+            $table->string('status')->default('menunggu');
             $table->foreignId('transaksi_id')->constrained('transaksis')->onDelete('cascade');
             $table->timestamps();
         });

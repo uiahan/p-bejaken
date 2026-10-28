@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Support\NomorHp;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 #[Fillable(['name', 'email', 'password', 'role', 'alamat', 'no_hp'])]
@@ -48,6 +49,11 @@ class User extends Authenticatable
     public function isStaf(): bool
     {
         return $this->punyaRole(...self::ROLE_STAF);
+    }
+
+    public function transaksis(): HasMany
+    {
+        return $this->hasMany(Transaksi::class, 'users_id');
     }
 
     /** $user->peran_label : "Super Admin" */

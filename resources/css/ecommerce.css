@@ -60,7 +60,7 @@
    Botol naik satu per satu ke rak, dan latar berubah mengikuti botol yang disorot.
    -------------------------------------------------------------------------- */
 .rak-band {
-    --rak: #E8DCC3;
+    --rak: #f4cd72;
     background: var(--rak);
     transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -106,8 +106,18 @@
     .rak-isi {
         display: grid;
         width: auto;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        /* --n = jumlah produk (diisi dari view), jadi rak menyesuaikan 3, 6, atau 8 botol */
+        grid-template-columns: repeat(var(--n, 6), minmax(0, 1fr));
         gap: 1.25rem;
+    }
+    /* lebih dari 8 botol: rak bisa digeser ke samping, botol tidak jadi mengecil */
+    .rak-scroll.rak-banyak {
+        overflow-x: auto;
+        margin-block: -1rem;
+        padding-block: 1rem;
+    }
+    .rak-banyak .rak-isi {
+        min-width: calc(var(--n) * 9rem + (var(--n) - 1) * 1.25rem);
     }
 }
 .rak-isi > li {
@@ -490,4 +500,22 @@ body.cart-open .toast {
     .cart-btn.bump {
         animation: none;
     }
+}
+
+/* produk tanpa foto: tampil huruf pertama sebagai pengganti */
+.foto-kosong {
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-hutan) 35%, transparent);
+}
+.rak-item .foto-kosong {
+    height: 55%;
+    width: 5rem;
+    font-size: 3.5rem;
+}
+.produk .foto .foto-kosong {
+    position: absolute;
+    inset: 0;
+    font-size: clamp(3.5rem, 12vw, 6rem);
 }

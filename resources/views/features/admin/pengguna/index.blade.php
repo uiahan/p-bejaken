@@ -95,7 +95,7 @@
         </ul>
 
         <p class="mt-4 text-sm text-hutan/65">Menampilkan {{ $daftar->count() }} dari {{ $daftar->total() }} pengguna.</p>
-        {{ $daftar->links('components.admin.pengguna.pagination') }}
+        {{ $daftar->links('components.admin.pagination') }}
     </section>
 
     {{-- Konfirmasi hapus --}}

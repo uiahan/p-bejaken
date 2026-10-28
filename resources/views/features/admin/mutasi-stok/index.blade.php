@@ -149,6 +149,6 @@
             Menampilkan {{ $daftar->count() }} dari {{ $daftar->total() }} mutasi.
         </p>
 
-        {{ $daftar->links('components.admin.pengguna.pagination') }}
+        {{ $daftar->links('components.admin.pagination') }}
     </section>
 @endsection

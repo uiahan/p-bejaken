@@ -3,22 +3,12 @@
 @section('ecommerce')
 @php
     /*
-     * CONTOH DATA. Nanti ganti dengan data dari database produk (tabel produk & stok).
-     *  - harga & stok di bawah hanya contoh, belum ada di data wawancara.
-     *  - cairan = warna asli minuman, latar = warna lembut di belakang foto.
-     *  - tags   = kebutuhan, dipakai untuk filter.
+     * Data produk datang dari TokoController: $katalog (produk berstatus aktif) dan $filter (chip kebutuhan).
+     * Foto dari kolom `gambar`; warna latar & kategori filter dihitung otomatis oleh model Produk.
      */
-    $varian = [
-        ['slug' => 'sweet-tamarind',   'nama' => 'Sweet Tamarind',    'bahan' => 'Asam jawa',                'manfaat' => 'Menyegarkan dan membantu pencernaan.',                                  'latar' => '#F1C7A4', 'tags' => 'pencernaan',                 'harga' => 15000, 'stok' => 12],
-        ['slug' => 'blue-telang',      'nama' => 'Blue Telang',       'bahan' => 'Bunga telang',             'manfaat' => 'Mengandung antioksidan alami (antosianin).',                            'latar' => '#DCC7E3', 'tags' => 'antioksidan',                'harga' => 15000, 'stok' => 4],
-        ['slug' => 'kunyit-asem-sirih','nama' => 'Kunyit Asem Sirih', 'bahan' => 'Kunyit, asam jawa, sirih', 'manfaat' => 'Menjaga kesehatan lambung dan kulit. Sirih bersifat antiseptik.',        'latar' => '#F4CD72', 'tags' => 'lambung-kulit antioksidan', 'harga' => 15000, 'stok' => 18],
-        ['slug' => 'red-rosella',      'nama' => 'Red Rosella',       'bahan' => 'Rosela',                   'manfaat' => 'Kaya vitamin C dan antioksidan.',                                       'latar' => '#F2B8B2', 'tags' => 'antioksidan',                'harga' => 15000, 'stok' => 9],
-        ['slug' => 'beras-kencur',     'nama' => 'Beras Kencur',      'bahan' => 'Beras, kencur',            'manfaat' => 'Membantu meredakan pegal dan menghangatkan badan.',                     'latar' => '#E8DCC3', 'tags' => 'hangat',                     'harga' => 15000, 'stok' => 15],
-        ['slug' => 'sereh-jahe',       'nama' => 'Sereh Jahe',        'bahan' => 'Sereh, jahe',              'manfaat' => 'Menghangatkan badan.',                                                  'latar' => '#E6D08E', 'tags' => 'hangat',                     'harga' => 15000, 'stok' => 0],
-    ];
-    $filter = ['semua' => 'Semua', 'pencernaan' => 'Pencernaan', 'antioksidan' => 'Antioksidan', 'lambung-kulit' => 'Lambung dan kulit', 'hangat' => 'Menghangatkan'];
     $ulasan = []; // nanti isi dari tabel ulasan: nama, rating, komentar
-    $rp = fn ($n) => 'Rp ' . number_format($n, 0, ',', '.');
+    $rp = fn ($n) => 'Rp ' . number_format((float) $n, 0, ',', '.');
+    $ada = $katalog->isNotEmpty();
 @endphp
 
 {{-- ===================== RAK VARIAN ===================== --}}
@@ -31,25 +21,31 @@
             </h1>
         </div>
 
-        <div class="rak mt-10 lg:mt-14">
-            <div class="rak-scroll">
-            <ul class="rak-isi">
-                @foreach ($varian as $i => $v)
-                    <li style="--i: {{ $i }}">
-                        <button type="button" class="rak-item" data-rak data-target="#p-{{ $v['slug'] }}" data-latar="{{ $v['latar'] }}" data-nama="{{ $v['nama'] }}" data-harga="{{ $rp($v['harga']) }}" aria-label="{{ $v['nama'] }}, lihat di katalog">
-                            <span class="foto">
-                                <img src="{{ asset('images/produk/' . $v['slug'] . '-potong.webp') }}" alt="" width="360" height="800">
-                            </span>
-                            <span class="nama">{{ $v['nama'] }}</span>
-                        </button>
-                    </li>
-                @endforeach
-            </ul>
+        @if ($ada)
+            <div class="rak mt-10 lg:mt-14">
+                <div class="rak-scroll {{ $katalog->count() > 8 ? 'rak-banyak' : '' }}">
+                <ul class="rak-isi" style="--n: {{ $katalog->count() }}">
+                    @foreach ($katalog as $i => $p)
+                        <li style="--i: {{ $i }}">
+                            <button type="button" class="rak-item" data-rak data-target="#p-{{ $p->id }}" data-latar="{{ $p->latar }}" data-nama="{{ $p->nama_produk }}" data-harga="{{ $rp($p->harga) }}" aria-label="{{ $p->nama_produk }}, lihat di katalog">
+                                <span class="foto">
+                                    @if ($p->gambar_url)
+                                        <img src="{{ $p->gambar_url }}" alt="" width="360" height="800">
+                                    @else
+                                        <span class="foto-kosong" aria-hidden="true">{{ mb_strtoupper(mb_substr($p->nama_produk, 0, 1)) }}</span>
+                                    @endif
+                                </span>
+                                <span class="nama">{{ $p->nama_produk }}</span>
+                            </button>
+                        </li>
+                    @endforeach
+                </ul>
+                </div>
+                <p class="rak-note mt-5 text-[15px]" data-rak-note aria-live="off">
+                    <span>Arahkan ke botol untuk melihat harga.</span>
+                </p>
             </div>
-            <p class="rak-note mt-5 text-[15px]" data-rak-note aria-live="off">
-                <span>Arahkan ke botol untuk melihat harga.</span>
-            </p>
-        </div>
+        @endif
     </div>
 </section>
 
@@ -61,53 +57,67 @@
                 Semua varian
             </h2>
 
-            <div class="-mx-6 overflow-x-auto px-6 pb-1 lg:mx-0 lg:overflow-visible lg:px-0" role="group" aria-label="Filter kebutuhan">
-                <div class="flex w-max gap-2 lg:w-auto lg:flex-wrap lg:justify-end">
-                    @foreach ($filter as $kunci => $label)
-                        <button type="button" class="chip whitespace-nowrap rounded-full px-5 py-2.5 text-[15px] font-medium" data-filter="{{ $kunci }}" aria-pressed="{{ $kunci === 'semua' ? 'true' : 'false' }}">{{ $label }}</button>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-
-        <p class="mt-5 text-sm text-hutan/65" data-hasil aria-live="polite">Menampilkan {{ count($varian) }} dari {{ count($varian) }} varian</p>
-
-        <ul class="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
-            @foreach ($varian as $v)
-                @php($habis = $v['stok'] <= 0)
-                <li id="p-{{ $v['slug'] }}" class="produk flex flex-col {{ $habis ? 'habis' : '' }}" data-produk data-tags="{{ $v['tags'] }}">
-                    <a href="{{ url('/produk/' . $v['slug']) }}" class="foto" style="--c: {{ $v['latar'] }}" aria-label="Lihat detail {{ $v['nama'] }}">
-                        @if ($habis)
-                            <span class="tag">Stok habis</span>
-                        @elseif ($v['stok'] <= 5)
-                            <span class="tag">Sisa {{ $v['stok'] }} botol</span>
-                        @endif
-                        <img src="{{ asset('images/produk/' . $v['slug'] . '-potong.webp') }}" alt="Botol jamu {{ $v['nama'] }} 250 ml" width="360" height="800" loading="lazy">
-                    </a>
-
-                    <div class="mt-5 flex flex-1 flex-col">
-                        <h3 class="text-xl font-semibold tracking-tight lg:text-2xl">
-                            <a href="{{ url('/produk/' . $v['slug']) }}">{{ $v['nama'] }}</a>
-                        </h3>
-                        <p class="mt-0.5 text-sm text-hutan/65 lg:text-[15px]">{{ $v['bahan'] }} &middot; 250 ml</p>
-                        <p class="mt-3 line-clamp-2 text-[15px] leading-relaxed lg:text-base">{{ $v['manfaat'] }}</p>
-                        <p class="mt-auto pt-4 text-xl font-semibold tracking-tight">{{ $rp($v['harga']) }}</p>
-
-                        <button type="button" class="btn-tambah mt-4 w-full rounded-full bg-hutan px-5 py-3.5 font-medium text-daun" data-add
-                            data-slug="{{ $v['slug'] }}" data-nama="{{ $v['nama'] }}" data-harga="{{ $v['harga'] }}" data-stok="{{ $v['stok'] }}"
-                            data-foto="{{ asset('images/produk/' . $v['slug'] . '-potong.webp') }}" data-latar="{{ $v['latar'] }}"
-                            @disabled($habis)>
-                            <span data-label>{{ $habis ? 'Stok habis' : 'Tambah ke keranjang' }}</span>
-                        </button>
+            {{-- Chip hanya muncul untuk kebutuhan yang dimiliki minimal satu produk --}}
+            @if ($ada && count($filter) > 1)
+                <div class="-mx-6 overflow-x-auto px-6 pb-1 lg:mx-0 lg:overflow-visible lg:px-0" role="group" aria-label="Filter kebutuhan">
+                    <div class="flex w-max gap-2 lg:w-auto lg:flex-wrap lg:justify-end">
+                        @foreach ($filter as $kunci => $label)
+                            <button type="button" class="chip whitespace-nowrap rounded-full px-5 py-2.5 text-[15px] font-medium" data-filter="{{ $kunci }}" aria-pressed="{{ $kunci === 'semua' ? 'true' : 'false' }}">{{ $label }}</button>
+                        @endforeach
                     </div>
-                </li>
-            @endforeach
-        </ul>
-
-        <div class="mt-16 hidden max-w-md" data-filter-kosong hidden>
-            <p class="text-xl font-semibold tracking-tight">Belum ada varian untuk kebutuhan ini.</p>
-            <p class="mt-2 leading-relaxed text-hutan/70">Pilih "Semua" atau tanyakan ke chatbot.</p>
+                </div>
+            @endif
         </div>
+
+        @if ($ada)
+            <p class="mt-5 text-sm text-hutan/65" data-hasil aria-live="polite">Menampilkan {{ $katalog->count() }} dari {{ $katalog->count() }} varian</p>
+
+            <ul class="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
+                @foreach ($katalog as $p)
+                    @php($habis = $p->stok <= 0)
+                    <li id="p-{{ $p->id }}" class="produk flex flex-col {{ $habis ? 'habis' : '' }}" data-produk data-tags="{{ implode(' ', $p->tags) }}">
+                        <a href="{{ url('/produk/' . $p->slug) }}" class="foto" style="--c: {{ $p->latar }}" aria-label="Lihat detail {{ $p->nama_produk }}">
+                            @if ($habis)
+                                <span class="tag">Stok habis</span>
+                            @elseif ($p->stok <= \App\Models\Produk::AMBANG_MENIPIS)
+                                <span class="tag">Sisa {{ $p->stok }} botol</span>
+                            @endif
+                            @if ($p->gambar_url)
+                                <img src="{{ $p->gambar_url }}" alt="Botol jamu {{ $p->nama_produk }}" width="360" height="800" loading="lazy">
+                            @else
+                                <span class="foto-kosong" aria-hidden="true">{{ mb_strtoupper(mb_substr($p->nama_produk, 0, 1)) }}</span>
+                            @endif
+                        </a>
+
+                        <div class="mt-5 flex flex-1 flex-col">
+                            <h3 class="text-xl font-semibold tracking-tight lg:text-2xl">
+                                <a href="{{ url('/produk/' . $p->slug) }}">{{ $p->nama_produk }}</a>
+                            </h3>
+                            <p class="mt-0.5 line-clamp-1 text-sm text-hutan/65 lg:text-[15px]">{{ $p->deskripsi }}</p>
+                            <p class="mt-3 line-clamp-2 text-[15px] leading-relaxed lg:text-base">{{ $p->khasiat }}</p>
+                            <p class="mt-auto pt-4 text-xl font-semibold tracking-tight">{{ $rp($p->harga) }}</p>
+
+                            <button type="button" class="btn-tambah mt-4 w-full rounded-full bg-hutan px-5 py-3.5 font-medium text-daun" data-add
+                                data-id="{{ $p->id }}" data-slug="{{ $p->slug }}" data-nama="{{ $p->nama_produk }}" data-harga="{{ (int) $p->harga }}" data-stok="{{ $p->stok }}"
+                                data-foto="{{ $p->gambar_url }}" data-latar="{{ $p->latar }}"
+                                @disabled($habis)>
+                                <span data-label>{{ $habis ? 'Stok habis' : 'Tambah ke keranjang' }}</span>
+                            </button>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+
+            <div class="mt-16 hidden max-w-md" data-filter-kosong hidden>
+                <p class="text-xl font-semibold tracking-tight">Belum ada varian untuk kebutuhan ini.</p>
+                <p class="mt-2 leading-relaxed text-hutan/70">Pilih "Semua" atau tanyakan ke chatbot.</p>
+            </div>
+        @else
+            <div class="mt-12 max-w-md">
+                <p class="text-xl font-semibold tracking-tight">Belum ada produk yang dijual.</p>
+                <p class="mt-2 leading-relaxed text-hutan/70">Varian jamu akan tampil di sini setelah ditambahkan dari dashboard.</p>
+            </div>
+        @endif
     </div>
 </section>
 
